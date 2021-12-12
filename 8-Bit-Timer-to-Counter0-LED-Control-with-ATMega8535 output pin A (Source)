@@ -1,0 +1,40 @@
+/***************************************************** 
+Project : 8-Bit Timer to Counter0 LED Control with ATMega8535 output pin A
+Version : - D
+ate    : 18/04/2021 
+Author  : Yansha Ramadhan 
+Company : - 
+Comments: -
+ 
+ 
+Chip type               : ATmega8535 
+Program type            : Application 
+AVR Core Clock frequency: 4,000000 MHz 
+Memory model            : Small 
+External RAM size       : 0 
+Data Stack size         : 128 
+*****************************************************/ 
+ 
+#include <mega8535.h>  
+unsigned char led=0xfe;  
+ 
+void main(void)  
+{             
+DDRA=0xFF; PORTA=led; TCNT0=0x00; TCCR0=0x05; TIMSK=0x01; TIFR=0x00;         
+#asm ("sei");             
+while(1)            
+{
+PORTA=led;
+}  
+}  
+interrupt [TIM0_OVF] 
+void timer0_overflow(void)  
+{ 
+TCNT0 = 0x00;  
+led<<=1;  
+led|=1;  
+if (led==0xFF)  
+{ 
+led=0xFE; 
+}  
+} 
